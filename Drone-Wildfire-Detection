@@ -1,0 +1,83 @@
+clc
+clear all;
+close all;
+% vid = videoinput('winvideo', 1, 'MJPG_1280x720'); 
+% src = getselectedsource(vid);
+% vid.FramesPerTrigger = 1;
+%count = 0;
+pic = imread('1.jpg');
+% figure;
+% imshow (pic)
+[row,col] = size(pic);
+Rule1_Thr = (row*col)*0.5;
+Rule2_Thr = (row*col)*0.5;
+Rule3_Thr = (row*col)*0.5;
+Rule4_Thr = (row*col)*0.5;
+Rule5_Thr = (row*col)*0.5;
+Rule6_Thr = (row*col)*0.5;
+Rule7_Thr = (row*col)*0.5;
+R = pic(:,:,1);
+G = pic(:,:,2);
+B = pic(:,:,3);
+Rmean = mean(mean(R));
+Gmean = mean(mean(G));
+Bmean = mean(mean(B));
+Y = 16+(0.2568*R)+(0.5041 *G)+(0.0979*B);
+Cb = 128-(0.1482*R)-(0.2910*G)+(0.4392*B); 
+Cr = 128+(0.4392*R)-(0.3678*G)-(0.0714*B);
+Ymean = mean(mean(Y));
+Cbmean = mean(mean(Cb));
+Crmean = mean(mean(Cr));
+% Rule 1
+Rule1_Counter = 0;
+[M1,N1] = size(R);
+for index1 = 1:M1;
+    for index2 = 1:N1;
+        if(R(index1,index2)>G(index1, index2)>B(index1,index2))
+           Rule1_Counter = Rule1_Counter +1;
+        end  
+    end
+end
+display (Rule1_Counter);
+display(Rule1_Thr);
+if (Rule1_Counter > Rule1_Thr)
+    display ('Firetest_1 = True');
+else
+    display('Firetest_1 = False');
+end
+
+% Rule 2
+Rule2_Counter = 0;
+[M2,N2] = size(R);
+for index3 = 1:M2;
+    for index4 = 1:N2;
+        if(R(index3,index4)>Rmean) && (G(index3,index4)>Gmean) && (B(index3,index4)>Bmean)
+           Rule2_Counter = Rule2_Counter +1;
+        end  
+    end
+end
+display (Rule2_Counter);
+display(Rule2_Thr);
+if (Rule2_Counter > Rule2_Thr)
+    display ('Firetest_2 = True');
+else
+    display('Firetest_2 = False');
+end
+
+% Rule 3
+Rule3_Counter = 0;
+[M3,N3] = size(R);
+for index5 = 1:M3;
+    for index6 = 1:N3;
+        if(Y(index5,index6)>Cb(index5, index6));
+           Rule3_Counter = Rule3_Counter +1;
+        end  
+    end
+end
+display (Rule3_Counter);
+display(Rule3_Thr);
+if (Rule3_Counter > Rule3_Thr)
+    display ('Firetest_3 = True');
+else
+    display('Firetest_3 = False');
+end
